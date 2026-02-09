@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PNL Dilemme — Ta musique préférée</title>
+
+  <!-- CSS dans /styles -->
+  <link rel="stylesheet" href="styles/PNLstyle.css" />
+</head>
+
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-orb orb-c"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">
+        <span class="logoDot"></span>
+        <span class="logoDot"></span>
+        <span class="logoDot"></span>
+      </div>
+      <div class="brandText">
+        <div class="brandTitle">PNL Dilemme</div>
+        <div class="brandSub">Choisis entre 2 sons — on trouve ton préféré</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hudItem">
+        <div class="hudLabel">Avancement</div>
+        <div class="progressWrap">
+          <div class="progressBar" id="progressBar"></div>
+          <div class="progressGlow"></div>
+        </div>
+      </div>
+
+      <div class="hudItem hudRight">
+        <div class="hudLabel">Duel</div>
+        <div class="hudValue"><span id="duelIndex">1</span> / <span id="duelTotal">?</span></div>
+      </div>
+
+      <button class="btnGhost" id="btnRestart" title="Recommencer">
+        <span class="btnIcon">↻</span>
+        Rejouer
+      </button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <section class="arena">
+      <div class="hint" id="hint">
+        <span class="hintPulse"></span>
+        Clique sur la carte de ton choix
+      </div>
+
+      <div class="cards" id="cards">
+        <!-- Cartes injectées en JS -->
+      </div>
+
+      <div class="microHud">
+        <div class="chip" id="chipRound">Round 1</div>
+        <div class="chip chipSoft" id="chipRemaining">Chargement…</div>
+      </div>
+    </section>
+
+    <section class="result hidden" id="result">
+      <div class="resultCard">
+        <div class="resultSpark"></div>
+        <div class="resultTitle">Voici votre musique PNL préférée</div>
+        <div class="resultTrack" id="resultTrack">—</div>
+        <div class="resultCoverWrap">
+          <img id="resultCover" class="resultCover" alt="Cover" />
+          <div class="resultRing"></div>
+        </div>
+
+        <div class="resultActions">
+          <button class="btnPrimary" id="btnPlayAgain">Rejouer</button>
+          <button class="btnGhost" id="btnShare">Copier le résultat</button>
+        </div>
+
+        <div class="toast" id="toast">Copié ✅</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footerLeft">Covers: /covers · CSS: /styles</div>
+    <div class="footerRight">Animations + tournoi aléatoire</div>
+  </footer>
+
+  <script>
+    // =========================
+    // 1) DATA — titres + covers
+    // =========================
+    const COVER = {
+      album1: "covers/qlf.jpeg",
+      album2: "covers/lmc.jpeg",
+      album3: "covers/ddl.jpeg",
+      album4: "covers/deuxfreres.jpeg",
+    };
+
+    // Album 1) Que La Famille
+    const album1 = [
+      "Je vis, Je visser",
+      "Lala",
+      "Différents",
+      "Obligés de prendre",
+      "De la fenêtre au ter-ter",
+      "PNL",
+      "J'comprends pas",
+      "Gala Gala",
+      "La petite voix",
+      "Athéna",
+      "Recherche du bonheur",
+      "Simba",
+    ].map(t => ({ title: t, album: "Que La Famille", cover: COVER.album1 }));
+
+    // Album 2) Le Monde Chico
+    const album2 = [
+      "Le monde ou rien",
+      "Sur Paname",
+      "Oh lala",
+      "J'vends",
+      "Abonné",
+      "J'suis PNL",
+      "Mexico",
+      "Porte de Mesrine",
+      "Dans ta rue",
+      "Laisse",
+      "Loin des hommes",
+      "Le M",
+      "Rebenga",
+      "Plus Tony que Sosa",
+      "Que la mif",
+      "Tempête",
+      "Dans la sououpe",
+    ].map(t => ({ title: t, album: "Le Monde Chico", cover: COVER.album2 }));
+
+    // Album 3) Dans La Légende
+    const album3 = [
+      "Da",
+      "Naha",
+      "Dans la légende",
+      "Mira",
+      "J'suis QLF",
+      "La vie est belle",
+      "Kratos",
+      "Luz de Luna",
+      "Tu sais pas",
+      "Sheita",
+      "Humain",
+      "Bambina",
+      "Bené",
+      "Uranus",
+      "Onizuka",
+      "Jusq'au dernier gramme",
+      "Cramés",
+      "Je t'haine",
+    ].map(t => ({ title: t, album: "Dans La Légende", cover: COVER.album3 }));
+
+    // Album 4) Deux Frères
+    const album4 = [
+      "Au DD",
+      "Autre monde",
+      "Chang",
+      "Blanka",
+      "91's",
+      "A l'ammoniaque",
+      "Celsius",
+      "Deux frères",
+      "Hasta la vista",
+      "Cœurs",
+      "Shenmue",
+      "Kuta Ubud",
+      "Menace",
+      "Zoulou Tchaing",
+      "Déconnecté",
+      "La misère est si belle",
+      "Ryuk",
+      "Comme pas deux",
+      "Sibérie",
+      "Bang",
+      "Capuche",
+      "Frontières",
+    ].map(t => ({ title: t, album: "Deux Frères", cover: COVER.album4 }));
+
+    const ALL_TRACKS = [
+      ...album1, ...album2, ...album3, ...album4
+    ].map((x, i) => ({ id: i + 1, ...x }));
+
+    // =========================
+    // 2) Helpers
+    // =========================
+    const $ = (sel) => document.querySelector(sel);
+    const cardsEl = $("#cards");
+    const resultEl = $("#result");
+    const stageEl = $("#stage");
+    const toastEl = $("#toast");
+
+    const progressBar = $("#progressBar");
+    const duelIndexEl = $("#duelIndex");
+    const duelTotalEl = $("#duelTotal");
+    const chipRound = $("#chipRound");
+    const chipRemaining = $("#chipRemaining");
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    // ==========================================
+    // 3) Tournoi (bracket) — 2 cartes à la fois
+    // ==========================================
+    let currentPool = [];
+    let nextPool = [];
+    let currentPair = [];
+    let duelIndex = 0;
+    let duelTotal = 0;
+    let roundIndex = 1;
+
+    // Pour une progression UX: on approxime le nombre de duels
+    // avec (N - 1) dans un tournoi élimination directe.
+    function estimateTotalDuels(n) {
+      return Math.max(1, n - 1);
+    }
+
+    function resetGame() {
+      // Reset UI
+      resultEl.classList.add("hidden");
+      stageEl.classList.remove("done");
+
+      // Reset state
+      currentPool = shuffle(ALL_TRACKS);
+      nextPool = [];
+      currentPair = [];
+      duelIndex = 0;
+      roundIndex = 1;
+
+      duelTotal = estimateTotalDuels(currentPool.length);
+      duelTotalEl.textContent = duelTotal;
+
+      updateHud();
+      renderNext();
+    }
+
+    function updateHud() {
+      duelIndexEl.textContent = Math.max(1, duelIndex);
+      chipRound.textContent = `Round ${roundIndex}`;
+      chipRemaining.textContent = `${currentPool.length + nextPool.length} titres encore en jeu`;
+
+      const pct = clamp((duelIndex / duelTotal) * 100, 0, 100);
+      progressBar.style.width = pct.toFixed(2) + "%";
+    }
+
+    function renderPair(a, b) {
+      cardsEl.innerHTML = "";
+
+      const left = createCard(a, "left");
+      const right = createCard(b, "right");
+
+      cardsEl.appendChild(left);
+      cardsEl.appendChild(right);
+
+      // petite entrée anim
+      requestAnimationFrame(() => {
+        left.classList.add("in");
+        right.classList.add("in");
+      });
+    }
+
+    function createCard(track, side) {
+      const card = document.createElement("button");
+      card.className = `card ${side}`;
+      card.type = "button";
+      card.setAttribute("data-id", track.id);
+
+      card.innerHTML = `
+        <div class="cardFx">
+          <div class="cardSheen"></div>
+          <div class="cardBorder"></div>
+          <div class="cardNoise"></div>
+        </div>
+
+        <div class="coverWrap">
+          <img class="cover" src="${track.cover}" alt="cover ${track.album}">
+          <div class="coverGlow"></div>
+          <div class="coverScan"></div>
+        </div>
+
+        <div class="meta">
+          <div class="title">${escapeHtml(track.title)}</div>
+          <div class="sub">${escapeHtml(track.album)}</div>
+        </div>
+
+        <div class="pickHint">
+          <span class="pickDot"></span>
+          Choisir
+        </div>
+      `;
+
+      card.addEventListener("click", () => onPick(track.id));
+      return card;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderNext() {
+      // Si currentPool vide: on passe au round suivant
+      if (currentPool.length === 0) {
+        if (nextPool.length === 1) {
+          return finish(nextPool[0]);
+        }
+        currentPool = shuffle(nextPool);
+        nextPool = [];
+        roundIndex++;
+      }
+
+      // Si 1 seul dans le pool -> auto-advance
+      if (currentPool.length === 1) {
+        nextPool.push(currentPool.shift());
+        updateHud();
+        return renderNext();
+      }
+
+      // Prendre 2
+      const a = currentPool.shift();
+      const b = currentPool.shift();
+      currentPair = [a, b];
+
+      duelIndex++;
+      updateHud();
+      renderPair(a, b);
+    }
+
+    let locked = false;
+
+    function onPick(trackId) {
+      if (locked) return;
+      locked = true;
+
+      const [a, b] = currentPair;
+      const winner = (a.id === trackId) ? a : b;
+      const loser = (a.id === trackId) ? b : a;
+
+      const winnerEl = cardsEl.querySelector(`.card[data-id="${winner.id}"]`);
+      const loserEl = cardsEl.querySelector(`.card[data-id="${loser.id}"]`);
+
+      // Animations: winner vert + pulse / loser fade out
+      winnerEl.classList.add("picked", "win");
+      loserEl.classList.add("picked", "lose");
+
+      // Après anim -> push winner, next duel
+      setTimeout(() => {
+        nextPool.push(winner);
+
+        // reset visuel pour round suivant
+        cardsEl.classList.add("out");
+        setTimeout(() => {
+          cardsEl.classList.remove("out");
+          locked = false;
+          renderNext();
+        }, 260);
+      }, 650);
+    }
+
+    function finish(winner) {
+      stageEl.classList.add("done");
+      resultEl.classList.remove("hidden");
+
+      $("#resultTrack").textContent = winner.title;
+      $("#resultCover").src = winner.cover;
+
+      // Progress full
+      progressBar.style.width = "100%";
+      chipRemaining.textContent = "Terminé ✅";
+    }
+
+    // =========================
+    // 4) Buttons
+    // =========================
+    $("#btnRestart").addEventListener("click", resetGame);
+    $("#btnPlayAgain").addEventListener("click", resetGame);
+
+    $("#btnShare").addEventListener("click", async () => {
+      const title = $("#resultTrack").textContent?.trim() || "";
+      const text = `Ma musique PNL préférée (selon le dilemme) : ${title}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast();
+      } catch {
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast();
+      }
+    });
+
+    function showToast() {
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 1100);
+    }
+
+    // =========================
+    // 5) Start
+    // =========================
+    resetGame();
+  </script>
+</body>
+</html>
