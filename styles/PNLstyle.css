@@ -191,15 +191,6 @@ body{
   padding: 10px 22px 40px;
 }
 
-/* Stage */
-.stage{
-  position:relative;
-  z-index:2;
-  max-width: 1200px;
-  margin: 10px auto 0;
-  padding: 10px 22px 40px;
-}
-
 .arena{
   position: relative;
   border-radius: var(--radius);
@@ -224,13 +215,6 @@ body{
   background-size: 100% 52px;
   opacity:.08;
   pointer-events:none;
-}
-
-/* Sur mobile, changer l'orientation du dégradé en vertical */
-@media (max-width: 860px){
-  .arena {
-    background: linear-gradient(180deg, var(--bg-left), var(--bg-mid), var(--bg-right));
-  }
 }
 
 .hint{
@@ -278,6 +262,13 @@ body{
 @media (max-width: 860px){
   .cards{ grid-template-columns: 1fr; }
   .progressWrap{ width: 150px; }
+  .arena{ 
+    background: linear-gradient(180deg, var(--bg-left), var(--bg-mid), var(--bg-right));
+    padding: 16px; /* AJOUTE ÇA */
+  }
+  .stage {
+    padding: 10px 16px 40px; /* AJOUTE ÇA AUSSI */
+  }
 }
 
 /* Card */
