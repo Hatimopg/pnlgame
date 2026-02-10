@@ -579,24 +579,44 @@ body{
 }
 .toast.show{ opacity: 1; transform: translateY(0); }
 
-/* Footer */
-.footer{
-  position:relative;
-  z-index:2;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px 22px 26px;
-  display:flex;
-  justify-content:space-between;
-  color: rgba(234,255,246,.62);
-  font-size: 12px;
+/* =========================
+   AUDIO PLAYER STYLÉ
+========================= */
+
+.audio {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
 }
-.footer a{
-  color: rgba(234,255,246,.72);
-  text-decoration: none;
-  font-weight: 600;
-  transition: color .2s ease;
+
+/* Fond du lecteur */
+.audio::-webkit-media-controls-panel {
+  background: linear-gradient(135deg, var(--accent), #111);
+  border-radius: 14px;
 }
-.footer a:hover{
-  color: rgba(234,255,246,.92);
+
+/* Texte et icônes */
+.audio::-webkit-media-controls-current-time-display,
+.audio::-webkit-media-controls-time-remaining-display {
+  color: white;
+  font-weight: 500;
+}
+
+/* Boutons */
+.audio::-webkit-media-controls-play-button,
+.audio::-webkit-media-controls-volume-slider {
+  filter: invert(1);
+}
+
+/* Barre de progression */
+.audio::-webkit-media-controls-timeline {
+  filter: invert(1) contrast(1.2);
+}
+
+/* Pour Firefox (fallback) */
+.audio {
+  background: linear-gradient(135deg, var(--accent), #111);
+  padding: 6px;
 }

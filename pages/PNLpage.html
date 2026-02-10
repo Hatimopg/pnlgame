@@ -109,27 +109,108 @@
   };
 
   const album1 = [
-    "Je vis, Je visser","Lala","Différents","Obligés de prendre","De la fenêtre au ter-ter","PNL",
-    "J'comprends pas","Gala Gala","La petite voix","Athéna","Recherche du bonheur","Simba",
-  ].map(t => ({ title: t, album: "Que La Famille", cover: COVER.qlf }));
+    {title:"Je vis, Je visser", file:"../musics/qlf/jevisjevisser.mp3"},
+    {title:"Lala", file:"../musics/qlf/lala.mp3"},
+    {title:"Différents", file:"../musics/qlf/differents.mp3"},
+    {title:"Obligés de prendre", file:"../musics/qlf/obligesdeprendre.mp3"},
+    {title:"De la fenêtre au ter-ter", file:"../musics/qlf/fenetre.mp3"},
+    {title:"PNL", file:"../musics/qlf/pnl.mp3"},
+    {title:"J'comprends pas", file:"../musics/qlf/jcomprendspas.mp3"},
+    {title:"Gala Gala", file:"../musics/qlf/gala.mp3"},
+    {title:"La petite voix", file:"../musics/qlf/petitevoix.mp3"},
+    {title:"Athéna", file:"../musics/qlf/athena.mp3"},
+    {title:"Recherche du bonheur", file:"../musics/qlf/recherche.mp3"},
+    {title:"Simba", file:"../musics/qlf/simba.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Que La Famille",
+  cover: COVER.qlf
+}));
 
   const album2 = [
-    "Le monde ou rien","Sur Paname","Oh lala","J'vends","Abonné","J'suis PNL","Mexico","Porte de Mesrine",
-    "Dans ta rue","Laisse","Loin des hommes","Le M","Rebenga","Plus Tony que Sosa","Que la mif",
-    "Tempête","Dans la sououpe",
-  ].map(t => ({ title: t, album: "Le Monde Chico", cover: COVER.lmc }));
+    {title:"Le monde ou rien", file:"../musics/lmc/lemondeourien.mp3"},
+    {title:"Sur Paname", file:"../musics/lmc/surpaname.mp3"},
+    {title:"Oh lala", file:"../musics/lmc/ohlala.mp3"},
+    {title:"J'vends", file:"../musics/lmc/jvends.mp3"},
+    {title:"Abonné", file:"../musics/lmc/abonne.mp3"},
+    {title:"J'suis PNL", file:"../musics/lmc/jsuispnl.mp3"},
+    {title:"Mexico", file:"../musics/lmc/mexico.mp3"},
+    {title:"Porte de Mesrine", file:"../musics/lmc/porte.mp3"},
+    {title:"Dans ta rue", file:"../musics/lmc/danstarue.mp3"},
+    {title:"Laisse", file:"../musics/lmc/laisse.mp3"},
+    {title:"Loin des hommes", file:"../musics/lmc/loin.mp3"},
+    {title:"Le M", file:"../musics/lmc/M.mp3"},
+    {title:"Rebenga", file:"../musics/lmc/rebenga.mp3"},
+    {title:"Plus Tony que Sosa", file:"../musics/lmc/ptsq.mp3"},
+    {title:"Que la mif", file:"../musics/lmc/qlm.mp3"},
+    {title:"Tempête", file:"../musics/lmc/tempete.mp3"},
+    {title:"Dans la soucoupe", file:"../musics/lmc/soucoupe.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Le Monde Chico",
+  cover: COVER.lmc
+}));
+
 
   const album3 = [
-    "Da","Naha","Dans la légende","Mira","J'suis QLF","La vie est belle","Kratos","Luz de Luna",
-    "Tu sais pas","Sheita","Humain","Bambina","Bené","Uranus","Onizuka","Jusq'au dernier gramme",
-    "Cramés","Je t'haine",
-  ].map(t => ({ title: t, album: "Dans La Légende", cover: COVER.ddl }));
+    {title: "Da", file:"../musics/ddl/da.mp3"},
+    {title: "Naha", file:"../musics/ddl/naha.mp3"},
+    {title: "Dans la légende", file:"../musics/ddl/ddl.mp3"},
+    {title: "Mira", file:"../musics/ddl/mira.mp3"} ,
+    {title: "J'suis QLF", file:"../musics/ddl/jsuisqlf.mp3"},
+    {title: "La vie est belle", file:"../musics/ddl/lavie.mp3"},
+    {title: "Kratos", file:"../musics/ddl/kratos.mp3"},
+    {title: "Luz de Luna", file:"../musics/ddl/luz.mp3"},
+    {title: "Tu sais pas", file:"../musics/ddl/tusaispas.mp3"},
+    {title: "Sheita", file:"../musics/ddl/sheita.mp3"},
+    {title: "Humain", file:"../musics/ddl/humain.mp3"},
+    {title: "Bambina", file:"../musics/ddl/bambina.mp3"},
+    {title: "Bené", file:"../musics/ddl/bene.mp3"} ,
+    {title: "Uranus", file:"../musics/ddl/uranus.mp3"},
+    {title: "Onizuka", file:"../musics/ddl/onizuka.mp3"},
+    {title: "Jusq'au dernier gramme", file:"../musics/ddl/gramme.mp3"},
+    {title: "Cramés", file:"../musics/ddl/crames.mp3"},
+    {title: "Je t'haine", file:"../musics/ddl/jethaine.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Dans La Légende",
+  cover: COVER.ddl
+}));
+
 
   const album4 = [
-    "Au DD","Autre monde","Chang","Blanka","91's","A l'ammoniaque","Celsius","Deux frères","Hasta la vista",
-    "Cœurs","Shenmue","Kuta Ubud","Menace","Zoulou Tchaing","Déconnecté","La misère est si belle",
-    "Ryuk","Comme pas deux","Sibérie","Bang","Capuche","Frontières",
-  ].map(t => ({ title: t, album: "Deux Frères", cover: COVER.df }));
+    {title: "Au DD", file:"../musics/df/audd.mp3"},
+    {title: "Autre monde", file:"../musics/df/autremonde.mp3"},
+    {title: "Chang", file:"../musics/df/chang.mp3"},
+    {title: "Blanka", file:"../musics/df/blanka.mp3"},
+    {title: "91's", file:"../musics/df/91s.mp3"},
+    {title: "A l'ammoniaque", file:"../musics/df/ammoniaque.mp3"},
+    {title: "Celsius", file:"../musics/df/celsius.mp3"},
+    {title: "Deux frères", file:"../musics/df/deuxfreres.mp3"},
+    {title: "Hasta la vista", file:"../musics/df/hasta.mp3"},
+    {title: "Cœurs", file:"../musics/df/coeurs.mp3"},
+    {title: "Shenmue", file:"../musics/df/shenmue.mp3"},
+    {title: "Kuta Ubud", file:"../musics/df/kutaubud.mp3"},
+    {title: "Menace", file:"../musics/df/menace.mp3"},
+    {title: "Zoulou Tchaing", file:"../musics/df/zoulou.mp3"},
+    {title: "Déconnecté", file:"../musics/df/deconnecte.mp3"},
+    {title: "La misère est si belle", file:"../musics/df/misere.mp3"},
+    {title: "Ryuk", file:"../musics/df/ryuk.mp3"},
+    {title: "Comme pas deux", file:"../musics/df/commepasdeux.mp3"},
+    {title: "Sibérie", file:"../musics/df/siberie.mp3"},
+    {title: "Bang", file:"../musics/df/bang.mp3"},
+    {title: "Capuche", file:"../musics/df/capuche.mp3"},
+    {title: "Frontières", file:"../musics/df/frontieres.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Deux Frères",
+  cover: COVER.df
+}));
+
 
   const ALL_TRACKS = [...album1, ...album2, ...album3, ...album4]
     .map((x, i) => ({ id: i + 1, ...x }));
@@ -255,39 +336,44 @@
   }
 
   function createCard(track) {
-    const theme = themeForAlbum(track.album);
-    const isDark = track.album === "Le Monde Chico";
+  const theme = themeForAlbum(track.album);
+  const isDark = track.album === "Le Monde Chico";
 
-    const card = document.createElement("button");
-    card.className = "card in";
-    card.style.setProperty("--accent", mixHex(theme.a, theme.b, 0.5));
+  const card = document.createElement("button");
+  card.className = "card in";
+  card.style.setProperty("--accent", mixHex(theme.a, theme.b, 0.5));
 
-    card.innerHTML = `
-      <div class="cardFx">
-        <div class="cardSheen"></div>
-        <div class="cardBorder"></div>
-        <div class="cardNoise"></div>
-      </div>
+  card.innerHTML = `
+    <div class="cardFx">
+      <div class="cardSheen"></div>
+      <div class="cardBorder"></div>
+      <div class="cardNoise"></div>
+    </div>
 
-      <div class="coverWrap">
-        <img class="cover" src="${track.cover}">
-        <div class="coverGlow"></div>
-        <div class="coverScan"></div>
-      </div>
+    <div class="coverWrap">
+      <img class="cover" src="${track.cover}">
+      <div class="coverGlow"></div>
+      <div class="coverScan"></div>
+    </div>
 
-      <div class="meta" style="color:${isDark ? "#ffffff" : "inherit"}">
-        <div class="title">${escapeHtml(track.title)}</div>
-        <div class="sub">${escapeHtml(track.album)}</div>
-      </div>
+    <div class="meta" style="color:${isDark ? "#ffffff" : "inherit"}">
+      <div class="title">${escapeHtml(track.title)}</div>
+      <div class="sub">${escapeHtml(track.album)}</div>
 
-      <div class="pickHint">
-        <span class="pickDot"></span> Choisir
-      </div>
-    `;
+      <audio controls class="audio">
+        <source src="${track.file}" type="audio/mpeg">
+      </audio>
+    </div>
 
-    card.onclick = () => onPick(track);
-    return card;
-  }
+    <div class="pickHint">
+      <span class="pickDot"></span> Choisir
+    </div>
+  `;
+
+  card.onclick = () => onPick(track);
+  return card;
+}
+
 
   function onPick(track) {
     if (locked) return;
@@ -330,7 +416,7 @@
   // 5) Start
   // =========================
   resetGame();
-</script>
+  </script>
 
 </body>
 </html>
