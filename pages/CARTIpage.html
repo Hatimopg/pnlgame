@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playboi Carti Dilemme — Ta musique préférée</title>
+
+  <!-- CSS dans /styles -->
+  <link rel="stylesheet" href="../styles/CARTIstyle.css" />
+</head>
+
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-orb orb-c"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <span class="logoDot"></span>
+        <span class="logoDot"></span>
+        <span class="logoDot"></span>
+      </div>
+      <div class="brandText">
+        <div class="brandTitle">Playboi Carti Dilemme</div>
+        <div class="brandSub">Choisis entre 2 sons</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hudItem">
+        <div class="hudLabel">Avancement</div>
+        <div class="progressWrap">
+          <div class="progressBar" id="progressBar"></div>
+          <div class="progressGlow"></div>
+        </div>
+      </div>
+
+      <div class="hudItem hudRight">
+        <div class="hudLabel">Duel</div>
+        <div class="hudValue"><span id="duelIndex">1</span> / <span id="duelTotal">?</span></div>
+      </div>
+
+      <button class="btnGhost" id="btnRestart" type="button" title="Recommencer">
+        <span class="btnIcon">↻</span> Rejouer
+      </button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <section class="arena" id="arena">
+      <div class="hint" id="hint">
+        <span class="hintPulse"></span>
+        Clique sur la carte de ton choix
+      </div>
+
+      <div class="cards" id="cards">
+        <!-- Cartes injectées en JS -->
+      </div>
+
+      <div class="microHud">
+        <div class="chip" id="chipRound">Round 1</div>
+        <div class="chip chipSoft" id="chipRemaining">Chargement…</div>
+      </div>
+    </section>
+
+    <section class="result hidden" id="result">
+      <div class="resultCard">
+        <div class="resultSpark"></div>
+        <div class="resultTitle">Voici votre musique Playboi Carti préférée</div>
+        <div class="resultTrack" id="resultTrack">—</div>
+
+        <div class="resultCoverWrap">
+          <img id="resultCover" class="resultCover" alt="Cover" />
+          <div class="resultRing"></div>
+        </div>
+
+        <div class="resultActions">
+          <button class="btnPrimary" id="btnPlayAgain" type="button">Rejouer</button>
+          <button class="btnGhost" id="btnShare" type="button">Copier le résultat</button>
+        </div>
+
+        <div class="toast" id="toast">Copié ✅</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+  </footer>
+  
+  <script>
+  // =========================
+  // 1) DATA — titres + covers
+  // =========================
+  const COVER = {
+    self: "../covers/selftitled.jpg",
+    die: "../covers/dielit.jpg",
+    wlr: "../covers/wlr.jpg",
+    im: "../covers/iamusic.jpg",
+  };
+
+  const ALBUM_THEMES = {
+    "Self Titled": { a: "#6e6e6e", b: "#5a3a1b" },  
+    "Die Lit": { a: "#000000", b: "#ffffff" },          
+    "Whole Lotta Red": { a: "#ff0000", b: "#000000" },  
+    "I AM MUSIC": { a: "#ffffff", b: "#000000" },       
+  };
+
+  const album1 = [
+    {title:"Location", file:"../musics/self/location.mp3"},
+    {title:"Magnolia", file:"../musics/self/magnolia.mp3"},
+    {title:"Lookin", file:"../musics/self/lookin.mp3"},
+    {title:"Wokeuplikethis*", file:"../musics/self/wokeuplikethis.mp3"},
+    {title:"Let It Go", file:"../musics/self/letitgo.mp3"},
+    {title:"Half & Half", file:"../musics/self/halfandhalf.mp3"},
+    {title:"New Choppa", file:"../musics/self/newchoppa.mp3"},
+    {title:"Other shit", file:"../musics/self/othershit.mp3"},
+    {title:"NO.9", file:"../musics/self/no9.mp3"},
+    {title:"dothatshit!", file:"../musics/self/dothatshit.mp3"},
+    {title:"Lame Niggaz", file:"../musics/self/lameniggaz.mp3"},
+    {title:"Yah Mean", file:"../musics/self/yahmean.mp3"},
+    {title:"Flex", file:"../musics/self/flex.mp3"},
+    {title:"Kelly K", file:"../musics/self/kellyk.mp3"},
+    {title:"Had 2", file:"../musics/self/had2.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Self Titled",
+  cover: COVER.self
+}));
+
+  const album2 = [
+    {title:"Long Time (Intro)", file:"../musics/die/longtimeintro.mp3"},
+    {title:"R.I.P.", file:"../musics/die/rip.mp3"},
+    {title:"Lean 4 Real", file:"../musics/die/lean4real.mp3"},
+    {title:"Old Money", file:"../musics/die/oldmoney.mp3"},
+    {title:"Love Hurts", file:"../musics/die/lovehurts.mp3"},
+    {title:"Shoota", file:"../musics/die/shoota.mp3"},
+    {title:"Right Now", file:"../musics/die/rightnow.mp3"},
+    {title:"Poke It Out", file:"../musics/die/pokeitout.mp3"},
+    {title:"Home (KOD)", file:"../musics/die/home.mp3"},
+    {title:"Fell In Luv", file:"../musics/die/fellinluv.mp3"},
+    {title:"Foreign", file:"../musics/die/foreign.mp3"},
+    {title:"Pull Up", file:"../musics/die/pullup.mp3"},
+    {title:"Mileage", file:"../musics/die/mileage.mp3"},
+    {title:"FlatBed Freestyle", file:"../musics/die/flatbed.mp3"},
+    {title:"No Time", file:"../musics/die/notime.mp3"},
+    {title:"Middle of the Summer", file:"../musics/die/middleofthesummer.mp3"},
+    {title:"Choppa Won't Miss", file:"../musics/die/choppawontmiss.mp3"},
+    {title:"R.I.P. Fredo", file:"../musics/die/ripfredo.mp3"},
+    {title:"Top", file:"../musics/die/top.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Die Lit",
+  cover: COVER.die
+}));
+
+  const album3 = [
+    {title: "Rockstar Made", file:"../musics/wlr/rockstarmade.mp3"},
+    {title: "Go2DaMoon", file:"../musics/wlr/go2damoon.mp3"},
+    {title: "Stop Breathing", file:"../musics/wlr/stopbreathing.mp3"},
+    {title: "Beno!", file:"../musics/wlr/beno.mp3"},
+    {title: "JumpOutTheHouse", file:"../musics/wlr/jumpoutthehouse.mp3"},
+    {title: "M3tamorphosis", file:"../musics/wlr/metamorphosis.mp3"},
+    {title: "Slay3r", file:"../musics/wlr/slay3r.mp3"},
+    {title: "No Sl33p", file:"../musics/wlr/nosl33p.mp3"},
+    {title: "New Tank", file:"../musics/wlr/newtank.mp3"},
+    {title: "Teen X", file:"../musics/wlr/teenx.mp3"},
+    {title: "Meh", file:"../musics/wlr/meh.mp3"},
+    {title: "Vamp Anthem", file:"../musics/wlr/vampanthem.mp3"},
+    {title: "New N3on", file:"../musics/wlr/newn3on.mp3"},
+    {title: "Control", file:"../musics/wlr/control.mp3"},
+    {title: "Punk Monk", file:"../musics/wlr/punkmonk.mp3"},
+    {title: "On That Time", file:"../musics/wlr/onthattime.mp3"},
+    {title: "King Vamp", file:"../musics/wlr/kingvamp.mp3"},
+    {title: "Place", file:"../musics/wlr/place.mp3"}, 
+    {title: "Sky", file:"../musics/wlr/sky.mp3"},
+    {title: "Over", file:"../musics/wlr/over.mp3"},
+    {title: "ILoveUIHateU", file:"../musics/wlr/iloveuihateu.mp3"},
+    {title: "Die4Guy", file:"../musics/wlr/die4guy.mp3"},
+    {title: "Not PLaying", file:"../musics/wlr/notplaying.mp3"},
+    {title: "F33l Lik3 Dyin", file:"../musics/wlr/f33llik3dyin.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "Whole Lotta Red",
+  cover: COVER.wlr
+}));
+
+  const album4 = [
+    {title: "POP OUT", file:"../musics/iamusic/popout.mp3"},
+    {title:"CRUSH", file:"../musics/iamusic/crush.mp3"},
+    {title:"K POP", file:"../musics/iamusic/kpop.mp3"},
+    {title:"EVIL J0RDAN", file:"../musics/iamusic/eviljordan.mp3"},
+    {title:"MOJO JOJO", file:"../musics/iamusic/mojojojo.mp3"},
+    {title:"PHILLY", file:"../musics/iamusic/philly.mp3"},
+    {title:"RADAR", file:"../musics/iamusic/radar.mp3"},
+    {title:"RATHER LIE", file:"../musics/iamusic/ratherlie.mp3"},
+    {title:"FINE SHIT", file:"../musics/iamusic/fineshit.mp3"},
+    {title:"BACKD00R", file:"../musics/iamusic/backdoor.mp3"},
+    {title:"TOXIC", file:"../musics/iamusic/toxic.mp3"},
+    {title:"MUNYUN", file:"../musics/iamusic/munyun.mp3"},
+    {title:"CRANK", file:"../musics/iamusic/crank.mp3"},
+    {title:"CHARGE DEM HOES A FEE", file:"../musics/iamusic/chargedemhoesafee.mp3"},
+    {title:"GOOD CREDIT", file:"../musics/iamusic/goodcredit.mp3"},
+    {title:"I SEEEEEE YOU BABY BOI", file:"../musics/iamusic/iseeeeyoubabyboi.mp3"},
+    {title:"WAKE UP F1LTHY", file:"../musics/iamusic/wakeupf1lthy.mp3"},
+    {title:"JUMPIN", file:"../musics/iamusic/jumpin.mp3"},
+    {title:"TRIM", file:"../musics/iamusic/trim.mp3"},
+    {title:"COCAINE NOSE", file:"../musics/iamusic/cocainenose.mp3"},
+    {title:"WE NEED ALL DA VIBES", file:"../musics/iamusic/weneedalldavibes.mp3"},
+    {title:"OLYMPIAN", file:"../musics/iamusic/olympian.mp3"},
+    {title:"OPM BABI", file:"../musics/iamusic/opmbabi.mp3"},
+    {title:"TWIN TRIM", file:"../musics/iamusic/twintrim.mp3"},
+    {title:"LIKE WEEZY", file:"../musics/iamusic/likeweezy.mp3"},
+    {title:"DIS 1 GOT IT", file:"../musics/iamusic/dis1gotit.mp3"},
+    {title:"WALK", file:"../musics/iamusic/walk.mp3"},
+    {title:"HBA", file:"../musics/iamusic/hba.mp3"},
+    {title:"OVERLY", file:"../musics/iamusic/overly.mp3"},
+    {title:"SOUTH ATLANTA BABY", file:"../musics/iamusic/southatlantababy.mp3"},
+    {title:"DIFFERENT DAY", file:"../musics/iamusic/differentday.mp3"},
+    {title:"2024", file:"../musics/iamusic/2024.mp3"},
+    {title:"BACKR00MS", file:"../musics/iamusic/backrooms.mp3"},
+    {title:"FOMDJ", file:"../musics/iamusic/fomdj.mp3"},
+  ].map(t => ({
+  title: t.title,
+  file: t.file,
+  album: "I AM MUSIC",
+  cover: COVER.im
+}));
+
+
+  const ALL_TRACKS = [...album1, ...album2, ...album3, ...album4]
+    .map((x, i) => ({ id: i + 1, ...x }));
+
+  // =========================
+  // 2) Helpers
+  // =========================
+  const $ = (sel) => document.querySelector(sel);
+  const cardsEl = $("#cards");
+  const resultEl = $("#result");
+  const stageEl = $("#stage");
+  const arenaEl = $("#arena");
+  const toastEl = $("#toast");
+  const progressBar = $("#progressBar");
+  const duelIndexEl = $("#duelIndex");
+  const duelTotalEl = $("#duelTotal");
+  const chipRound = $("#chipRound");
+  const chipRemaining = $("#chipRemaining");
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function mixHex(c1, c2, t = 0.5) {
+    const a = hexToRgb(c1), b = hexToRgb(c2);
+    return rgbToHex(
+      Math.round(a.r + (b.r - a.r) * t),
+      Math.round(a.g + (b.g - a.g) * t),
+      Math.round(a.b + (b.b - a.b) * t)
+    );
+  }
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.replace("#", ""), 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+
+  function rgbToHex(r, g, b) {
+    return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join("");
+  }
+
+  function themeForAlbum(album) {
+    return ALBUM_THEMES[album];
+  }
+
+  function applyDuelTheme(left, right) {
+    const L = themeForAlbum(left.album);
+    const R = themeForAlbum(right.album);
+
+    arenaEl.style.setProperty("--bg-left", mixHex(L.a, L.b, 0.5));
+    arenaEl.style.setProperty("--bg-right", mixHex(R.a, R.b, 0.5));
+    arenaEl.style.setProperty("--bg-mid", mixHex(L.a, R.b, 0.5));
+  }
+
+  // =========================
+  // 3) GAME STATE (CHAMPION)
+  // =========================
+  let currentChampion = null;
+  let currentPool = [];
+  let duelIndex = 0;
+  let duelTotal = 0;
+  let locked = false;
+
+  function resetGame() {
+    locked = false;
+
+    resultEl.classList.add("hidden");
+    stageEl.classList.remove("done");
+
+    const shuffled = shuffle(ALL_TRACKS);
+    currentChampion = shuffled.shift(); // 👑 premier son
+    currentPool = shuffled;
+
+    duelIndex = 0;
+    duelTotal = ALL_TRACKS.length - 1;
+    duelTotalEl.textContent = duelTotal;
+
+    updateHud();
+    renderNext();
+  }
+
+  function updateHud() {
+    duelIndexEl.textContent = Math.max(1, duelIndex);
+    chipRound.textContent = "Dilemme";
+    chipRemaining.textContent = `${currentPool.length} titres restants`;
+
+    const pct = clamp((duelIndex / duelTotal) * 100, 0, 100);
+    progressBar.style.width = pct + "%";
+  }
+
+  function renderNext() {
+    if (currentPool.length === 0) {
+      return finish(currentChampion);
+    }
+
+    const challenger = currentPool.shift();
+    duelIndex++;
+    updateHud();
+
+    cardsEl.innerHTML = "";
+    applyDuelTheme(currentChampion, challenger);
+
+    cardsEl.appendChild(createCard(currentChampion));
+    cardsEl.appendChild(createCard(challenger));
+  }
+
+  function createCard(track) {
+  const theme = themeForAlbum(track.album);
+  const isDark = track.album === "Die Lit" || track.album === "Whole Lotta Red" || track.album === "Self Titled";
+
+  const card = document.createElement("button");
+  card.className = "card in";
+  card.style.setProperty("--accent", mixHex(theme.a, theme.b, 0.5));
+
+  card.innerHTML = `
+    <div class="cardFx">
+      <div class="cardSheen"></div>
+      <div class="cardBorder"></div>
+      <div class="cardNoise"></div>
+    </div>
+
+    <div class="coverWrap">
+      <img class="cover" src="${track.cover}">
+      <div class="coverGlow"></div>
+      <div class="coverScan"></div>
+    </div>
+
+    <div class="meta" style="color:${isDark ? "#ffffff" : "inherit"}">
+      <div class="title">${escapeHtml(track.title)}</div>
+      <div class="sub">${escapeHtml(track.album)}</div>
+
+      <audio controls class="audio">
+        <source src="${track.file}" type="audio/mpeg">
+      </audio>
+    </div>
+
+    <div class="pickHint">
+      <span class="pickDot"></span> Choisir
+    </div>
+  `;
+
+  card.onclick = () => onPick(track);
+  return card;
+}
+
+
+  function onPick(track) {
+    if (locked) return;
+    locked = true;
+
+    const isChampion = track.id === currentChampion.id;
+    currentChampion = isChampion ? currentChampion : track;
+
+    setTimeout(() => {
+      locked = false;
+      renderNext();
+    }, 450);
+  }
+
+  function finish(winner) {
+    stageEl.classList.add("done");
+    resultEl.classList.remove("hidden");
+    $("#resultTrack").textContent = winner.title;
+    $("#resultCover").src = winner.cover;
+    progressBar.style.width = "100%";
+    chipRemaining.textContent = "Terminé ✅";
+  }
+
+  // =========================
+  // 4) Buttons
+  // =========================
+  $("#btnRestart").onclick = resetGame;
+  $("#btnPlayAgain").onclick = resetGame;
+
+  $("#btnShare").onclick = async () => {
+    const text = `Ma musique PlayBoi Carti préférée : ${$("#resultTrack").textContent}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 1000);
+    } catch {}
+  };
+
+  // =========================
+  // 5) Start
+  // =========================
+  resetGame();
+  </script>
+
+</body>
+</html>
